@@ -6,15 +6,15 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import kotlinx.coroutines.withContext
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -40,9 +40,12 @@ class LogWritingService: Service() {
                 updateTimer.schedule(object: TimerTask(){
                     override fun run() {
                         if(getTimeDifferenceInMinutes() != null){
-                            if(getTimeDifferenceInMinutes() != 5){
+                            if(getTimeDifferenceInMinutes() != 6){
                                 logTimeStampsInFile()
-                            }else if(getTimeDifferenceInMinutes() == 5){
+                                Handler(Looper.getMainLooper()).post {
+                                    RxBus.accept(true)
+                                }
+                            }else if(getTimeDifferenceInMinutes() == 6){
                                 stopForeground(true)
                                 updateTimer.cancel()
                             }
