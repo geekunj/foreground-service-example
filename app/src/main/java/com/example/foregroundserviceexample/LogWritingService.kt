@@ -35,6 +35,7 @@ class LogWritingService: Service() {
         startForeground(12345, notification)
         CoroutineScope(Dispatchers.IO).launch{
             if(isExternalStorageAvailable()){
+                //logs timestamp in every 1 minute for a total of 5 minutes before the service ends
                 val updateTimer = Timer()
                 updateTimer.schedule(object: TimerTask(){
                     override fun run() {
