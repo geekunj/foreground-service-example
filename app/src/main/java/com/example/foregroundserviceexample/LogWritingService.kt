@@ -40,14 +40,15 @@ class LogWritingService: Service() {
                 updateTimer.schedule(object: TimerTask(){
                     override fun run() {
                         if(getTimeDifferenceInMinutes() != null){
-                            if(getTimeDifferenceInMinutes() != 6){
+                            if(getTimeDifferenceInMinutes() != 5){
                                 logTimeStampsInFile()
-                                Handler(Looper.getMainLooper()).post {
-                                    RxBus.accept(true)
-                                }
-                            }else if(getTimeDifferenceInMinutes() == 6){
-                                stopForeground(true)
+                                Handler(Looper.getMainLooper()).post { RxBus.accept(true) }
+                            }else if(getTimeDifferenceInMinutes() == 5){
+                                logTimeStampsInFile()
+                                Handler(Looper.getMainLooper()).post { RxBus.accept(true) }
                                 updateTimer.cancel()
+                                stopForeground(true)
+                                stopSelf()
                             }
                         }
 
